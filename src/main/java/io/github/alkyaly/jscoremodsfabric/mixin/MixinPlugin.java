@@ -36,10 +36,10 @@ import java.util.Set;
 
 public class MixinPlugin implements IMixinConfigPlugin {
 
-    private static final Map<String, Set<Transformer<?>>> TRANSFORMERS = new HashMap<>();
-    private static final List<String> DUMMY_MIXINS = new ArrayList<>();
+    private final Map<String, Set<Transformer<?>>> transformers = new HashMap<>();
+    private final List<String> dummyMixins = new ArrayList<>();
     public static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
-    private static int i = 0;
+    private int i = 0;
 
     @Override
     public void onLoad(String mixinPackage) {
@@ -59,10 +59,10 @@ public class MixinPlugin implements IMixinConfigPlugin {
                         String clazz = fixName(tf.getTargets().clazz());
                         String dummy = fixName(mixinPackage) + "/JS_" + i;
 
-                        //DUMMY_MIXINS.add("JS_" + i);
+                        //dummyMixins.add("JS_" + i);
                         LOOKUP.defineClass(fakeMixin(dummy, clazz));
                         addClassUrl(dummy);
-                        TRANSFORMERS.computeIfAbsent(clazz, k -> new HashSet<>())
+                        transformers.computeIfAbsent(clazz, k -> new HashSet<>())
                                 .add(tf);
                         i++;
                     }
@@ -78,13 +78,13 @@ public class MixinPlugin implements IMixinConfigPlugin {
     @Override
     public List<String> getMixins() {
         return null;
-        //return DUMMY_MIXINS;
+        //return dummyMixins;
     }
 
     @Override
     public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
         String tgClass = fixName(targetClassName);
-        Set<Transformer<?>> tfs = TRANSFORMERS.get(tgClass);
+        Set<Transformer<?>> tfs = transformers.get(tgClass);
 
         if (tfs != null) {
             for (Transformer<?> tf : tfs) {
