@@ -119,6 +119,9 @@ public class MixinPlugin implements IMixinConfigPlugin {
         }
     }
 
+    //taken from Fabric-Asm (https://github.com/Chocohead/Fabric-Asm)
+    //which is licensed under the Mozilla Public License version 2.0
+    //All credits go to Chocohead.
     private static byte[] fakeMixin(String name, String target) {
         ClassWriter cw = new ClassWriter(0);
         cw.visit(60, Opcodes.ACC_PUBLIC | Opcodes.ACC_ABSTRACT | Opcodes.ACC_INTERFACE, name, null, "java/lang/Object", null);

@@ -9,8 +9,8 @@
     "alkyaly"
   ],
   "contact": {
-    "issues": "https://github.com/alkyaly/lol/issues",
-    "sources": "https://github.com/alkyaly/lol/"
+    "issues": "https://github.com/alkyaly/JS-Coremods-Fabric/issues",
+    "sources": "https://github.com/alkyaly/JS-Coremods-Fabric/"
   },
 
   "license": "LGPLv2.1",
@@ -24,14 +24,6 @@
   "mixins": [
     "jscoremodsfabric.mixins.json"
   ],
-  "custom": {
-    "js": [
-      "ooo.js",
-      "ccc.js",
-      "ddd.js",
-      "eee.js"
-    ]
-  },
 
   "depends": {
     "fabricloader": ">=0.7.4",

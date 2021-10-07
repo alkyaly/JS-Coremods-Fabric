@@ -13,5 +13,6 @@ public class JsCoremodsFabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        LOGGER.info("\uD83E\uDD80");
     }
 }

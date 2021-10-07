@@ -71,7 +71,7 @@ public class Coremod {
                 return new FieldTransformer(this, name, targetName, getFunction(transformer));
             }
         }
-        throw new IllegalArgumentException("Type: " + target + "is unimplemented");
+        throw new IllegalArgumentException("Type: " + type + "is unimplemented");
     }
 
     private static <A, R> Function<A, R> getFunction(Bindings obj) {

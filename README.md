@@ -17,7 +17,7 @@ repositories {
 
 dependencies {
     //[...]
-    modImplementation(include("com.github.alkyaly:js-coremods-fabric:${version}")!!)
+    modImplementation(include("com.github.alkyaly:js-coremods-fabric:$version")!!)
     //[...]
 }
 ```
@@ -35,7 +35,7 @@ repositories {
 
 dependencies {
     //[...]
-    modImplementation(include('com.github.alkyaly:js-coremods-fabric:$version'))
+    modImplementation(include('com.github.alkyaly:js-coremods-fabric:${version}'))
     //[...]
 }
 ```
