@@ -1,7 +1,7 @@
 package io.github.alkyaly.jscoremodsfabric.tf;
 
 import io.github.alkyaly.jscoremodsfabric.Coremod;
-import io.github.alkyaly.jscoremodsfabric.Targets;
+import io.github.alkyaly.jscoremodsfabric.Target;
 
 import java.util.function.Function;
 
@@ -9,10 +9,10 @@ public abstract class Transformer<T> {
 
     private final Coremod coremod;
     private final String coremodName;
-    private final Targets targets;
+    private final Target targets;
     protected final Function<T, T> func;
 
-    public Transformer(Coremod coremod, String coremodName, Targets targets, Function<T, T> func) {
+    public Transformer(Coremod coremod, String coremodName, Target targets, Function<T, T> func) {
         this.coremod = coremod;
         this.coremodName = coremodName;
         this.targets = targets;
@@ -21,12 +21,8 @@ public abstract class Transformer<T> {
 
     public abstract T run(T input);
 
-    public Targets getTargets() {
+    public Target getTarget() {
         return targets;
-    }
-
-    public Coremod getCoremod() {
-        return coremod;
     }
 
     public String getCoremodName() {

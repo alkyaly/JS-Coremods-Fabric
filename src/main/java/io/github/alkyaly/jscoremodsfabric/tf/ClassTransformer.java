@@ -2,13 +2,13 @@ package io.github.alkyaly.jscoremodsfabric.tf;
 
 import io.github.alkyaly.jscoremodsfabric.Coremod;
 import io.github.alkyaly.jscoremodsfabric.JsCoremodsFabric;
-import io.github.alkyaly.jscoremodsfabric.Targets;
+import io.github.alkyaly.jscoremodsfabric.Target;
 import org.objectweb.asm.tree.ClassNode;
 
 import java.util.function.Function;
 
 public class ClassTransformer extends Transformer<ClassNode> {
-    public ClassTransformer(Coremod coremod, String coremodName, Targets targets, Function<ClassNode, ClassNode> func) {
+    public ClassTransformer(Coremod coremod, String coremodName, Target targets, Function<ClassNode, ClassNode> func) {
         super(coremod, coremodName, targets, func);
     }
 

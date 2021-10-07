@@ -3,7 +3,7 @@ package io.github.alkyaly.jscoremodsfabric.mixin;
 import io.github.alkyaly.jscoremodsfabric.Coremod;
 import io.github.alkyaly.jscoremodsfabric.JsCoremodsFabric;
 import io.github.alkyaly.jscoremodsfabric.ScriptManager;
-import io.github.alkyaly.jscoremodsfabric.Targets;
+import io.github.alkyaly.jscoremodsfabric.Target;
 import io.github.alkyaly.jscoremodsfabric.tf.ClassTransformer;
 import io.github.alkyaly.jscoremodsfabric.tf.FieldTransformer;
 import io.github.alkyaly.jscoremodsfabric.tf.MethodTransformer;
@@ -58,7 +58,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
                     List<? extends Transformer<?>> tfs = coremod.eval();
 
                     for (Transformer<?> tf : tfs) {
-                        String clazz = fixName(tf.getTargets().clazz());
+                        String clazz = fixName(tf.getTarget().clazz());
                         String js = "JS_" + i;
                         String dummy = fixName(mixinPackage) + "/" + js;
 
@@ -93,11 +93,11 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
         if (tfs != null) {
             for (Transformer<?> tf : tfs) {
-                Targets target = tf.getTargets();
+                Target target = tf.getTarget();
 
-                if (target instanceof Targets.Class) {
+                if (target instanceof Target.Class) {
                     ((ClassTransformer) tf).run(targetClass);
-                } else if (target instanceof Targets.Method tm) {
+                } else if (target instanceof Target.Method tm) {
                     MethodNode mtd = targetClass.methods.stream()
                             .filter(m -> m.name.equals(tm.name()))
                             .findAny()
@@ -106,7 +106,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
                                             tm.name(), tm.clazz(), tf.getCoremodName())));
 
                     ((MethodTransformer) tf).run(mtd);
-                } else if (target instanceof Targets.Field fi) {
+                } else if (target instanceof Target.Field fi) {
                     FieldNode field = targetClass.fields.stream()
                             .filter(f -> f.name.equals(fi.name()))
                             .findAny()

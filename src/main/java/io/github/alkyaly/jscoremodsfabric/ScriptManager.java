@@ -56,6 +56,7 @@ public final class ScriptManager {
             "org.objectweb.asm.tree.TableSwitchInsnNode",
             "org.objectweb.asm.tree.TryCatchBlockNode",
             "org.objectweb.asm.tree.TypeAnnotationNode",
+            "org.objectweb.asm.tree.AnnotationNode",
             "org.objectweb.asm.tree.TypeInsnNode",
             "org.objectweb.asm.tree.VarInsnNode",
 

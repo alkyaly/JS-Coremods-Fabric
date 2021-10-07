@@ -20,7 +20,7 @@ dependencies {
     mappings(loom.officialMojangMappings())
 
     modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
-    implementation("org.openjdk.nashorn:nashorn-core:15.3")
+    implementation(include("org.openjdk.nashorn:nashorn-core:15.3")!!)
 }
 
 tasks.processResources {

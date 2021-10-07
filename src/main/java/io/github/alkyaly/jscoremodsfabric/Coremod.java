@@ -49,25 +49,25 @@ public class Coremod {
 
         Map<String, Object> target = (Map<String, Object>) bindings.get("target");
         TargetType type = TargetType.valueOf((String) target.get("type"));
-        Targets targetName;
+        Target targetName;
         Bindings transformer = (Bindings) bindings.get("transformer");
 
         switch (type) {
             case CLASS -> {
-                String clsName = Targets.map(type, (String) target.get("name"), null, null);
-                targetName = new Targets.Class(clsName);
+                String clsName = Target.map(type, (String) target.get("name"), null, null);
+                targetName = new Target.Class(clsName);
                 return new ClassTransformer(this, name, targetName, getFunction(transformer));
             }
             case METHOD -> {
-                String clsMName = Targets.map(TargetType.CLASS, (String) target.get("class"), null, null);
-                String mFullName = Targets.map(type, (String) target.get("class"), (String) target.get("methodName"), (String) target.get("methodDesc"));
-                targetName = new Targets.Method(clsMName, mFullName);
+                String clsMName = Target.map(TargetType.CLASS, (String) target.get("class"), null, null);
+                String mFullName = Target.map(type, (String) target.get("class"), (String) target.get("methodName"), (String) target.get("methodDesc"));
+                targetName = new Target.Method(clsMName, mFullName);
                 return new MethodTransformer(this, name, targetName, getFunction(transformer));
             }
             case FIELD -> {
-                String clsFName = Targets.map(TargetType.CLASS, (String) target.get("class"), null, null);
-                String fFullName = Targets.map(type, (String) target.get("class"), (String) target.get("fieldName"), (String) target.get("fieldDesc"));
-                targetName = new Targets.Field(clsFName, fFullName);
+                String clsFName = Target.map(TargetType.CLASS, (String) target.get("class"), null, null);
+                String fFullName = Target.map(type, (String) target.get("class"), (String) target.get("fieldName"), (String) target.get("fieldDesc"));
+                targetName = new Target.Field(clsFName, fFullName);
                 return new FieldTransformer(this, name, targetName, getFunction(transformer));
             }
         }
