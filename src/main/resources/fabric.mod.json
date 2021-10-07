@@ -27,7 +27,9 @@
   "custom": {
     "js": [
       "ooo.js",
-      "ccc.js"
+      "ccc.js",
+      "ddd.js",
+      "eee.js"
     ]
   },
 

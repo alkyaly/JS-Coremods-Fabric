@@ -3,7 +3,7 @@ function initializeCoreMod() {
         'wooo': {
             'target': {
                 'type': 'CLASS',
-                'name': 'net.minecraft.client.renderer.LevelRenderer',
+                'name': 'net.minecraft.class_761',
             },
             'transformer': function(clazz) {
                 var Opcodes = Java.type('org.objectweb.asm.Opcodes');

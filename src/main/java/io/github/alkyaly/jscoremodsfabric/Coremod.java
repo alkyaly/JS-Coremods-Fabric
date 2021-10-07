@@ -54,17 +54,20 @@ public class Coremod {
 
         switch (type) {
             case CLASS -> {
-                targetName = new Targets.Class((String) target.get("name"));
+                String clsName = Targets.map(type, (String) target.get("name"), null, null);
+                targetName = new Targets.Class(clsName);
                 return new ClassTransformer(this, name, targetName, getFunction(transformer));
             }
             case METHOD -> {
-                targetName = new Targets.Method((String) target.get("class"),
-                        (String) target.get("methodName"), (String) target.get("methodDesc"));
+                String clsMName = Targets.map(TargetType.CLASS, (String) target.get("class"), null, null);
+                String mFullName = Targets.map(type, (String) target.get("class"), (String) target.get("methodName"), (String) target.get("methodDesc"));
+                targetName = new Targets.Method(clsMName, mFullName);
                 return new MethodTransformer(this, name, targetName, getFunction(transformer));
             }
             case FIELD -> {
-                targetName = new Targets.Field((String) target.get("class"),
-                        (String) target.get("fieldName"), (String) target.get("fieldDesc"));
+                String clsFName = Targets.map(TargetType.CLASS, (String) target.get("class"), null, null);
+                String fFullName = Targets.map(type, (String) target.get("class"), (String) target.get("fieldName"), (String) target.get("fieldDesc"));
+                targetName = new Targets.Field(clsFName, fFullName);
                 return new FieldTransformer(this, name, targetName, getFunction(transformer));
             }
         }

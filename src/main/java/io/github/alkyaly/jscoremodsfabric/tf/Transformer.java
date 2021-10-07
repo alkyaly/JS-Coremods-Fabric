@@ -24,4 +24,12 @@ public abstract class Transformer<T> {
     public Targets getTargets() {
         return targets;
     }
+
+    public Coremod getCoremod() {
+        return coremod;
+    }
+
+    public String getCoremodName() {
+        return coremodName;
+    }
 }

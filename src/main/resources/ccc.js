@@ -3,9 +3,9 @@ function initializeCoreMod() {
         'clear': {
             'target': {
                 'type': 'METHOD',
-                'class': 'net.minecraft.client.renderer.LevelRenderer',
-                'methodName': 'setLevel',
-                'methodDesc': '(Lnet/minecraft/client/multiplayer/ClientLevel;)V'
+                'class': 'net.minecraft.class_761',
+                'methodName': 'method_3244',
+                'methodDesc': '(Lnet/minecraft/class_638;)V'
             },
             'transformer': function(method) {
                 var TypeInsnNode = Java.type('org.objectweb.asm.tree.TypeInsnNode');

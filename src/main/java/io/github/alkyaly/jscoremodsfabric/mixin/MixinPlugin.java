@@ -22,12 +22,14 @@ import org.objectweb.asm.tree.MethodNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -37,8 +39,8 @@ import java.util.Set;
 public class MixinPlugin implements IMixinConfigPlugin {
 
     private final Map<String, Set<Transformer<?>>> transformers = new HashMap<>();
-    private final List<String> dummyMixins = new ArrayList<>();
-    public static final MethodHandles.Lookup LOOKUP = MethodHandles.lookup();
+    private final Map<String, String> targetToDummyMixin = new HashMap<>();
+    private final Map<String, byte[]> dummyClassToBytes = new HashMap<>();
     private int i = 0;
 
     @Override
@@ -57,18 +59,21 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
                     for (Transformer<?> tf : tfs) {
                         String clazz = fixName(tf.getTargets().clazz());
-                        String dummy = fixName(mixinPackage) + "/JS_" + i;
+                        String js = "JS_" + i;
+                        String dummy = fixName(mixinPackage) + "/" + js;
 
-                        //dummyMixins.add("JS_" + i);
-                        LOOKUP.defineClass(fakeMixin(dummy, clazz));
-                        addClassUrl(dummy);
+                        dummyClassToBytes.put('/' + dummy + ".class", fakeMixin(dummy, clazz));
+
+                        if (!targetToDummyMixin.containsKey(clazz)) {
+                            targetToDummyMixin.put(clazz, js);
+                            i++;
+                        }
                         transformers.computeIfAbsent(clazz, k -> new HashSet<>())
                                 .add(tf);
-                        i++;
                     }
 
                     JsCoremodsFabric.LOGGER.debug(JsCoremodsFabric.COREMOD, "CoreMod loaded successfully");
-                } catch (IOException | IllegalAccessException e) {
+                } catch (IOException e) {
                     JsCoremodsFabric.LOGGER.error(JsCoremodsFabric.COREMOD, "Error initializing CoreMod", e);
                 }
             }
@@ -77,8 +82,8 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public List<String> getMixins() {
-        return null;
-        //return dummyMixins;
+        addClassUrl(url(dummyClassToBytes));
+        return targetToDummyMixin.values().stream().toList();
     }
 
     @Override
@@ -95,31 +100,28 @@ public class MixinPlugin implements IMixinConfigPlugin {
                 } else if (target instanceof Targets.Method tm) {
                     MethodNode mtd = targetClass.methods.stream()
                             .filter(m -> m.name.equals(tm.name()))
-                            .filter(m -> m.desc.equals(tm.desc()))
                             .findAny()
                             .orElseThrow(() -> new IllegalArgumentException(
-                                    String.format("Could not find method %s with desc %s in target class %s",
-                                            tm.name(), tm.desc(), tm.clazz())));
+                                    String.format("Could not find method %s in target class %s referenced by coremod: %s",
+                                            tm.name(), tm.clazz(), tf.getCoremodName())));
 
                     ((MethodTransformer) tf).run(mtd);
                 } else if (target instanceof Targets.Field fi) {
                     FieldNode field = targetClass.fields.stream()
                             .filter(f -> f.name.equals(fi.name()))
-                            .filter(f -> f.desc.equals(fi.desc()))
                             .findAny()
                             .orElseThrow(() -> new IllegalArgumentException(
-                                    String.format("Could not find field %s with desc %s in target class %s",
-                                            fi.name(), fi.desc(), fi.clazz())));
+                                    String.format("Could not find field %s in target class %s referenced by coremod: %s",
+                                            fi.name(), fi.clazz(), tf.getCoremodName())));
                     ((FieldTransformer) tf).run(field);
                 }
             }
         }
     }
 
-
-    public static byte[] fakeMixin(String name, String target) {
+    private static byte[] fakeMixin(String name, String target) {
         ClassWriter cw = new ClassWriter(0);
-        cw.visit(52, Opcodes.ACC_PUBLIC | Opcodes.ACC_ABSTRACT | Opcodes.ACC_INTERFACE, name, null, "java/lang/Object", null);
+        cw.visit(60, Opcodes.ACC_PUBLIC | Opcodes.ACC_ABSTRACT | Opcodes.ACC_INTERFACE, name, null, "java/lang/Object", null);
 
         AnnotationVisitor mixinAnnotation = cw.visitAnnotation("Lorg/spongepowered/asm/mixin/Mixin;", false);
         AnnotationVisitor targetAnnotation = mixinAnnotation.visitArray("value");
@@ -131,7 +133,8 @@ public class MixinPlugin implements IMixinConfigPlugin {
         return cw.toByteArray();
     }
 
-    private static void addClassUrl(String clazz) {
+    private static void addClassUrl(URL url) {
+        if (url == null) return;
         ClassLoader loader = MixinPlugin.class.getClassLoader();
         Method addUrl = null;
 
@@ -147,9 +150,33 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
         try {
             addUrl.setAccessible(true);
-            addUrl.invoke(loader, MixinPlugin.class.getResource("/" + clazz));
+            addUrl.invoke(loader, url);
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException("Could not invoke URLClassLoader#addURL", e);
+        }
+    }
+
+    private static URL url(Map<String, byte[]> nameToBytes) {
+        try {
+            return new URL("", "", -1, "/", new URLStreamHandler() {
+                @Override
+                protected URLConnection openConnection(URL u) {
+                    return new URLConnection(u) {
+                        @Override
+                        public void connect() {
+                            throw new UnsupportedOperationException("noop");
+                        }
+
+                        @Override
+                        public InputStream getInputStream() {
+                            return new ByteArrayInputStream(nameToBytes.get(u.getPath()));
+                        }
+                    };
+                }
+            }
+            );
+        } catch (MalformedURLException ignored) {
+            return null;
         }
     }
 
