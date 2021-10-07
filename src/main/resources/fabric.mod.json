@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "jscoremodsfabric",
+  "version": "${version}",
+
+  "name": "JavaScript Coremods Fabric",
+  "description": "lol",
+  "authors": [
+    "alkyaly"
+  ],
+  "contact": {
+    "issues": "https://github.com/alkyaly/lol/issues",
+    "sources": "https://github.com/alkyaly/lol/"
+  },
+
+  "license": "LGPLv2.1",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.alkyaly.jscoremodsfabric.JsCoremodsFabric"
+    ]
+  },
+  "mixins": [
+    "jscoremodsfabric.mixins.json"
+  ],
+  "custom": {
+    "js": [
+      "ooo.js",
+      "ccc.js"
+    ]
+  },
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "java": ">=16",
+    "minecraft": ">=1.17"
+  }
+}
