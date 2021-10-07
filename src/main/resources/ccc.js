@@ -35,10 +35,3 @@ function initializeCoreMod() {
         }
     }
 }
-/*
-NEW java/lang/IllegalStateException
-    DUP
-    LDC "Pose stack not empty"
-    INVOKESPECIAL java/lang/IllegalStateException.<init> (Ljava/lang/String;)V
-    ATHROW
-    */

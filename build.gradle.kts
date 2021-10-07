@@ -1,6 +1,5 @@
 plugins {
     id("fabric-loom") version "0.10-SNAPSHOT"
-    id("io.github.juuxel.loom-quiltflower") version "1.3.0"
     `maven-publish`
 }
 
@@ -15,31 +14,10 @@ val archivesBaseName: String by project
 val modVersion: String by project
 val group: String by project
 
-repositories {
-    mavenLocal()
-    maven {
-        name = "Parchment"
-        url = uri("https://maven.parchmentmc.org")
-        content {
-            includeGroup("org.parchmentmc.data")
-        }
-    }
-    maven {
-        url = uri("https://maven.saps.dev/minecraft")
-    }
-}
-
 dependencies {
     minecraft("com.mojang:minecraft:$mcVersion")
-    
-    if (yarnVersion.isNotEmpty()) {
-        mappings("net.fabricmc:yarn:$mcVersion+build.$yarnVersion:v2")
-    } else {
-        mappings(loom.layered {
-            officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-1.17.1:2021.08.23-nightly-SNAPSHOT")
-        })
-    }
+
+    mappings(loom.officialMojangMappings())
 
     modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
     implementation("org.openjdk.nashorn:nashorn-core:15.3")
