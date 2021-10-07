@@ -14,6 +14,8 @@ val archivesBaseName: String by project
 val modVersion: String by project
 val group: String by project
 
+version = modVersion
+
 dependencies {
     minecraft("com.mojang:minecraft:$mcVersion")
 
