@@ -64,12 +64,14 @@ Those names must be in intermediary, otherwise will fail in different environmen
 `myExample.js`:
 ```javascript
 function initializeCoreMod() {
-    return 'name': {
-        'target': {
-            'type': 'FIELD',
-            'class': 'net.minecraft.CoolClass_1984',
-            'fieldName': 'COOL_NAME',
-            'fieldDesc': 'Ljava/lang/Object;'
+    return {
+        'name': {
+            'target': {
+                'type': 'FIELD',
+                'class': 'net.minecraft.CoolClass_1984',
+                'fieldName': 'COOL_NAME',
+                'fieldDesc': 'Ljava/lang/Object;'
+            }
         }
     }
     //...
@@ -83,24 +85,26 @@ Do all your transformations inside the function.
 `myExample.js`:
 ```javascript
 function initializeCoreMod() {
-    return 'name': {
-        'target': {
-            'type': 'FIELD',
-            'class': 'net.minecraft.CoolClass_1984',
-            'fieldName': 'COOL_NAME',
-            'fieldDesc': 'Ljava/lang/Object;'
-        },
-        'transformer': function(field) {
-            var Opcodes = Java.type('org.objectweb.asm.Opcodes');
-            var AnnotationNode = Java.type('org.objectweb.asm.tree.AnnotationNode');
+    return {
+        'name': {
+            'target': {
+                'type': 'FIELD',
+                'class': 'net.minecraft.CoolClass_1984',
+                'fieldName': 'COOL_NAME',
+                'fieldDesc': 'Ljava/lang/Object;'
+            },
+            'transformer': function(field) {
+                var Opcodes = Java.type('org.objectweb.asm.Opcodes');
+                var AnnotationNode = Java.type('org.objectweb.asm.tree.AnnotationNode');
            
-            field.access &= ~Opcodes.ACC_FINAL; //Strips the final modifier from the field
-            field.visibleAnnotations.add(new AnnotationNode('Lorg/jetbrains/annotations/Nullable;')); //Adds the nullable annotation
+                field.access &= ~Opcodes.ACC_FINAL; //Strips the final modifier from the field
+                field.visibleAnnotations.add(new AnnotationNode('Lorg/jetbrains/annotations/Nullable;')); //Adds the nullable annotation
             
-            //do thing
-            //go crazy
+                //do thing
+                //go crazy
             
-            return field;       
+                return field;       
+            }
         }
     }
 }
