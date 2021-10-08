@@ -78,7 +78,7 @@ public class Coremod {
         return a -> (R) ((ScriptObjectMirror) obj).call(obj, a);
     }
 
-    enum TargetType {
+    public enum TargetType {
         CLASS,
         METHOD,
         FIELD
