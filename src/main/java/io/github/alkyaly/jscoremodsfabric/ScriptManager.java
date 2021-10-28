@@ -35,7 +35,7 @@ public final class ScriptManager {
 
     public static final Set<String> ALLOWED_CLASSES = ImmutableSet.of(
             "org.objectweb.asm.Opcodes",
-            "io.github.alkyaly.jscoremods.api.ASMAPI",
+            "io.github.alkyaly.jscoremodsfabric.api.ASMAPI",
 
             "org.objectweb.asm.tree.AbstractInsnNode",
             "org.objectweb.asm.tree.FieldInsnNode",

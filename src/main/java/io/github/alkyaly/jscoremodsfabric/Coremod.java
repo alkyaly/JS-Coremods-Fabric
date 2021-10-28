@@ -11,6 +11,7 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -36,6 +37,12 @@ public class Coremod {
             return buildTransformers();
         } catch (ScriptException | NoSuchMethodException e) {
             throw new RuntimeException(e);
+        } finally {
+            try {
+                stream.close();
+            } catch (IOException e) {
+                JsCoremodsFabric.LOGGER.error("Couldn't close input stream!", e);
+            }
         }
     }
 

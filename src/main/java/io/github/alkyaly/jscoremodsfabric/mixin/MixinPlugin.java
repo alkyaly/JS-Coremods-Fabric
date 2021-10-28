@@ -139,19 +139,9 @@ public class MixinPlugin implements IMixinConfigPlugin {
     private static void addClassUrl(URL url) {
         if (url == null) return;
         ClassLoader loader = MixinPlugin.class.getClassLoader();
-        Method addUrl = null;
-
-        for (Method method : loader.getClass().getMethods()) {
-            if (method.getParameterCount() != 1) continue;
-            if (method.getReturnType() != void.class) continue;
-            if (method.getParameters()[0].getType() != URL.class) continue;
-            addUrl = method;
-            break;
-        }
-
-        if (addUrl == null) throw new NoSuchMethodError("Couldn't find URLClassLoader#addURL");
 
         try {
+            Method addUrl = loader.getClass().getMethod("addURL", URL.class);
             addUrl.setAccessible(true);
             addUrl.invoke(loader, url);
         } catch (ReflectiveOperationException e) {
@@ -161,7 +151,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
     private static URL url(Map<String, byte[]> nameToBytes) {
         try {
-            return new URL("", "", -1, "/", new URLStreamHandler() {
+            return new URL("jrt", null, -1, "/", new URLStreamHandler() {
                 @Override
                 protected URLConnection openConnection(URL u) {
                     return new URLConnection(u) {
