@@ -37,12 +37,6 @@ public class Coremod {
             return buildTransformers();
         } catch (ScriptException | NoSuchMethodException e) {
             throw new RuntimeException(e);
-        } finally {
-            try {
-                stream.close();
-            } catch (IOException e) {
-                JsCoremodsFabric.LOGGER.error("Couldn't close input stream!", e);
-            }
         }
     }
 
